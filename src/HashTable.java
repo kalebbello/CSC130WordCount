@@ -10,6 +10,7 @@ import java.util.List;
 // void remove( x )       --> Remove x
 // boolean contains( x )  --> Return true if x is present
 // void makeEmpty( )      --> Remove all items
+// hi
 
 /**
  * Separate chaining table implementation of hash tables.

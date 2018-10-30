@@ -77,5 +77,11 @@ public class WordCount {
             System.exit(1);
         }
         countWords(args[0]);
+        
+        switch (args[0])) {
+        	case '-b': countWords(args[0]);
+        	
+        	case '-a':
+        }
     }
 }

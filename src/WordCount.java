@@ -63,8 +63,8 @@ public class WordCount {
     /**
      * TODO add more options 
      * 
-     * The commandline structure should be:
-	 *	Usage: java Correlator [ -b | -a | -h ] <filename1> <filename2>
+     * The command line structure should be:
+	 *	Usage: java correlator [ -b | -a | -h ] <filename1> <filename2>
 	 *		• -b Use an Unbalanced BST in the backend
 	 *		• -a Use an AVL Tree in the backend
 	 *		• -h Use a Hashtable in the backend
@@ -72,24 +72,21 @@ public class WordCount {
 	 *@param args Files to utilize the word count program (Hamet, New Atlantis)
      */
     public static void main(String[] args) {
-    	if (args.length = 1) {
-    		countWords(args[1])
-    		System.exit(1);
-    	}
-        if (args[0] != -b | args[0] != -a | args[0] != -h) {
-            System.err.println("Usage: java Correlator [ -b | -a | -h ] <filename1> <filename2>");
+	    if (args[0] == "-b" | args[0] == "-a" | args[0] == "-h") {
+	    	switch (args[0]) {
+	    		case "-b": countWords(args[1]);
+	    			break;
+	    		case "-a":
+	    			break;
+			    case "-h":
+			    	break;
+	    	} 
+        } else if(args.length == 1){
+        	countWords(args[0]);
+        	System.exit(1);
+        } else {
+        	System.err.println("Usage: java Correlator [ -b | -a | -h ] <filename1> <filename2>");
             System.exit(1);
         }
-   
-        switch (args[0])) {
-        	case '-b': countWords(args[1]);
-        		break;
-        	case '-a':
-        		break;
-        	case '-h':
-        		break;
-        		
-        		
-        }
-    }
+      }
 }

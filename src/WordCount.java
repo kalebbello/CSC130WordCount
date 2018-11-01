@@ -72,16 +72,24 @@ public class WordCount {
 	 *@param args Files to utilize the word count program (Hamet, New Atlantis)
      */
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: filename of document to analyze");
+    	if (args.length = 1) {
+    		countWords(args[1])
+    		System.exit(1);
+    	}
+        if (args[0] != -b | args[0] != -a | args[0] != -h) {
+            System.err.println("Usage: java Correlator [ -b | -a | -h ] <filename1> <filename2>");
             System.exit(1);
         }
-        countWords(args[0]);
-        
+   
         switch (args[0])) {
-        	case '-b': countWords(args[0]);
-        	
+        	case '-b': countWords(args[1]);
+        		break;
         	case '-a':
+        		break;
+        	case '-h':
+        		break;
+        		
+        		
         }
     }
 }

@@ -8,22 +8,18 @@
  */
 public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E> implements DataCounter<E> {
 
-	private BSTNode overallRoot;
+	public BSTNode overallRoot;
 	
-	private AVLTree() {
-		BinarySearchTree<E> tree = new BinarySearchTree<E>();
-		this.overallRoot = tree.overallRoot;
-		
-	}
 	
 	// A utility function to get the height of the tree 
     private int height(BSTNode N) { 
         if (N == null) 
             return 0; 
+        else return N.height; 
   
-        return N.height; 
+        
     } 
-    
+    s
     /**
      * compares two heights and returns max
      * @param a height 1
@@ -81,7 +77,7 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
     	k3.left = singleRightRotate(k3.left);
     	return singleRightRotate(k3);
     }
-    
+     
     private BSTNode doubleRightLeftRotation(BSTNode k1) {
     	k1.right = singleRightRotate(k1.right);
     	return singleLeftRotate(k1);
@@ -97,7 +93,7 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
     
     private BSTNode insert(BSTNode node,E data) { 
     	  
-        /* 1.  Perform the normal BST insertion */
+        //Perform the normal BST insertion
         if (node == null) 
             return (new BSTNode(data)); 
   
@@ -108,37 +104,39 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
         else // Duplicate keys not allowed 
             return node; 
   
-        /* 2. Update height of this ancestor node */
+        //Update height of this ancestor node
         node.height = 1 + max(height(node.left), height(node.right)); 
   
-        /* 3. Get the balance factor of this ancestor 
-              node to check whether this node became 
-              unbalanced */
+        //Get the balance factor of this ancestor node to check whether this node became unbalanced 
         int balance = getBalance(node); 
        
   
-        // If this node becomes unbalanced, then there 
-        // are 4 cases 
-        // Left Left Case 
-        if (balance > 1 && data.compareTo(node.left.data) < 0) 
-            return singleRightRotate(node); //case 1
-  
-        // Right Right Case 
-        if (balance < -1 && data.compareTo(node.right.data) > 0) 
-            return singleLeftRotate(node); 
-  
-        // Left Right Case 
-        if (balance > 1 && data.compareTo(node.left.data) > 0) { 
-            return doubleLeftRightRotation(node);
-        } 
-  
-        // Right Left Case 
-        if (balance < -1 && data.compareTo(node.right.data) < 0) { 
-            return doubleRightLeftRotation(node);
-        } 
-  
-        /* return the (unchanged) node pointer */
-        return node; 
+        if(  balance > 1 )
+            if( height( node.left.left ) >= height( node.left.right ) )
+                node = singleRightRotate( node ); 
+            else
+                node = doubleLeftRightRotation( node );
+        else
+        if( balance < -1 ) // -1 to 1
+            if( height( node.right.right ) >= height( node.right.left ) )
+                node = singleLeftRotation( node ); 
+            else
+                node = doublerightleftrotation( node );
+        return node;
+    }
+
+    private BSTNode doublerightleftrotation(BSTNode root) {
+        root.right = singleRightRotate(root.right);
+        return singleLeftRotation(root);
+    }
+
+    private BSTNode singleLeftRotation(BSTNode root) {
+        BSTNode right = root.right;
+        root.right = right.left;
+        right.left = root;
+        return right;
+
+ 
     } 
     
     private void preOrder(BSTNode node) { 
@@ -148,31 +146,6 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
             preOrder(node.right); 
         } 
     } 
-    
-	public static <E extends Comparable<? super E>> void main(String[] args) { 
-        AVLTree<Integer> tree = new AVLTree<Integer>(); 
-  
-        /* Constructing tree given in the above figure */
-        tree.overallRoot = tree.insert(tree.overallRoot, 10); 
-        tree.overallRoot = tree.insert(tree.overallRoot, 20); 
-        tree.overallRoot = tree.insert(tree.overallRoot, 30); 
-        tree.overallRoot = tree.insert(tree.overallRoot, 40); 
-        tree.overallRoot = tree.insert(tree.overallRoot, 50); 
-        tree.overallRoot = tree.insert(tree.overallRoot, 25); 
-  
-        /* The constructed AVL Tree would be 
-             30 
-            /  \ 
-          20   40 
-         /  \     \ 
-        10  25    50 
-        */
-        System.out.println("Preorder traversal of constructed tree is : "); 
-        tree.preOrder(tree.overallRoot); 
-    } 
-
-	
-	
-	
-	
 }
+    
+	

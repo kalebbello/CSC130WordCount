@@ -1,219 +1,167 @@
-import java.util.LinkedList;
-import java.util.List;
-
-// SeparateChaining Hash table class
-//
-// CONSTRUCTION: an approximate initial size or default of 101
-//
-// ******************PUBLIC OPERATIONS*********************
-// void insert( x )       --> Insert x
-// void remove( x )       --> Remove x
-// boolean contains( x )  --> Return true if x is present
-// void makeEmpty( )      --> Remove all items
-// hi
-
 /**
- * Separate chaining table implementation of hash tables.
- * Note that all "matching" is based on the equals method.
- * HashTable works only with Strings, whereas the DataCounter interface is
- * generic.  You need the String contents to write your hashcode code.
+ * An implementation of hashtable mapping strings to
+ * integers. The hashtable uses separate chaining to
+ * for collision reduction.
  */
-public class HashTable<AnyType> implements DataCounter<String>
-{
-    /**
-     * Construct the hash table.
-     */
-    public HashTable()
-    {
-        this( DEFAULT_TABLE_SIZE );
+public class HashTable implements DataCounter<String> {
+    private static final int DEFAULT_BUCKET_COUNT = 16;
+
+    private Node[] buckets;
+
+    private int size;
+
+    public HashTable() {
+        this(DEFAULT_BUCKET_COUNT);
+    }
+
+    public HashTable(int bucketCount) {
+        this.buckets = new Node[bucketCount];
+        size = 0;
     }
 
     /**
-     * Construct the hash table.
-     * @param size approximate table size.
+     * {@inheritDoc}
      */
-    public SeparateChainingHashTable( int size )
-    {
-        theLists = new LinkedList[ nextPrime( size ) ];
-        for( int i = 0; i < theLists.length; i++ )
-            theLists[ i ] = new LinkedList<>( );
-    }
-
-    /**
-     * Insert into the hash table. If the item is
-     * already present, then do nothing.
-     * @param x the item to insert.
-     */
-    public void insert( AnyType x )
-    {
-        List<AnyType> whichList = theLists[ myhash( x ) ];
-        if( !whichList.contains( x ) )
-        {
-            whichList.add( x );
-
-                // Rehash; see Section 5.5
-            if( ++currentSize > theLists.length )
-                rehash( );
+    @SuppressWarnings("unchecked")
+    public DataCount<String>[] getCounts() {
+        DataCount<String>[] dataCounts = new DataCount[size];
+        int i = 0;
+        for(Node node : buckets) {
+            for(; node != null; node = node.next) {
+                dataCounts[i++] = new DataCount<>(node.data, node.count);
+            }
         }
+        return dataCounts;
     }
 
     /**
-     * Remove from the hash table.
-     * @param x the item to remove.
+     * {@inheritDoc}
      */
-    public void remove( AnyType x )
-    {
-        List<AnyType> whichList = theLists[ myhash( x ) ];
-        if( whichList.contains( x ) )
-    {
-        whichList.remove( x );
-            currentSize--;
-    }
+    public int getSize() {
+        return size;
     }
 
     /**
-     * Find an item in the hash table.
-     * @param x the item to search for.
-     * @return true if x isnot found.
+     * {@inheritDoc}
      */
-    public boolean contains( AnyType x )
-    {
-        List<AnyType> whichList = theLists[ myhash( x ) ];
-        return whichList.contains( x );
-    }
-
-    /**
-     * Make the hash table logically empty.
-     */
-    public void makeEmpty( )
-    {
-        for( int i = 0; i < theLists.length; i++ )
-            theLists[ i ].clear( );
-        currentSize = 0;    
-    }
-
-    /**
-     * A hash routine for String objects.
-     * @param key the String to hash.
-     * @param tableSize the size of the hash table.
-     * @return the hash value.
-     */
-    public static int hash( String key, int tableSize )
-    {
-        int hashVal = 0;
-
-        for( int i = 0; i < key.length( ); i++ )
-            hashVal = 37 * hashVal + key.charAt( i );
-
-        hashVal %= tableSize;
-        if( hashVal < 0 )
-            hashVal += tableSize;
-
-        return hashVal;
-    }
-
-    private void rehash( )
-    {
-        List<AnyType> [ ]  oldLists = theLists;
-
-            // Create new double-sized, empty table
-        theLists = new List[ nextPrime( 2 * theLists.length ) ];
-        for( int j = 0; j < theLists.length; j++ )
-            theLists[ j ] = new LinkedList<>( );
-
-            // Copy table over
-        currentSize = 0;
-        for( List<AnyType> list : oldLists )
-            for( AnyType item : list )
-                insert( item );
-    }
-
-    private int myhash( AnyType x )
-    {
-        int hashVal = x.hashCode( );
-
-        hashVal %= theLists.length;
-        if( hashVal < 0 )
-            hashVal += theLists.length;
-
-        return hashVal;
+    public void incCount(String data) {
+        if(calculateLoadFactor() > 0.75) {
+            rehash();
+        }
+        if(insert(buckets, data)) size++;
     }
     
-    private static final int DEFAULT_TABLE_SIZE = 101;
-
-        /** The array of Lists. */
-    private List<AnyType> [ ] theLists; 
-    private int currentSize;
-
     /**
-     * Internal method to find a prime number at least as large as n.
-     * @param n the starting number (must be positive).
-     * @return a prime number larger than or equal to n.
+     * Helper method to add elements into hashtable
+     * 
+     * @param buckets An array of nodes
+     * @param data The element to add to the hashtable
+     * @return Boolean value depending on whether insertion is successful
      */
-    private static int nextPrime( int n )
-    {
-        if( n % 2 == 0 )
-            n++;
-
-        for( ; !isPrime( n ); n += 2 )
-            ;
-
-        return n;
-    }
-
-    /**
-     * Internal method to test if a number is prime.
-     * Not an efficient algorithm.
-     * @param n the number to test.
-     * @return the result of the test.
-     */
-    private static boolean isPrime( int n )
-    {
-        if( n == 2 || n == 3 )
+    private boolean insert(Node[] buckets, String data) {
+        int hash = hashString(data) % buckets.length;
+        Node node = buckets[hash];
+        if(node == null) {
+            buckets[hash] = new Node(data);
             return true;
+        } else {
+            while(node != null && !node.data.equals(data)) {
+                node = node.next;
+            }
 
-        if( n == 1 || n % 2 == 0 )
-            return false;
-
-        for( int i = 3; i * i <= n; i += 2 )
-            if( n % i == 0 )
+            if(node == null) {
+                buckets[hash] = new Node(data, buckets[hash]);
+                return true;
+            } else {
+                node.count++;
                 return false;
-
-        return true;
-    }
-
-
-        // Simple main
-    public static void main( String [ ] args )
-    {
-        SeparateChainingHashTable<Integer> H = new SeparateChainingHashTable<>( );
-
-        long startTime = System.currentTimeMillis( );
-        
-        final int NUMS = 2000000;
-        final int GAP  =   37;
-
-        System.out.println( "Checking... (no more output means success)" );
-
-        for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-            H.insert( i );
-        for( int i = 1; i < NUMS; i+= 2 )
-            H.remove( i );
-
-        for( int i = 2; i < NUMS; i+=2 )
-            if( !H.contains( i ) )
-                System.out.println( "Find fails " + i );
-
-        for( int i = 1; i < NUMS; i+=2 )
-        {
-            if( H.contains( i ) )
-                System.out.println( "OOPS!!! " +  i  );
+            }
         }
-        
-        long endTime = System.currentTimeMillis( );
-        
-        System.out.println( "Elapsed time: " + (endTime - startTime) );
     }
+    
+    /**
+     * Finding the load factor of the hashtable 
+     * 
+     * @return the load factor of the hashtable
+     */
+    private double calculateLoadFactor() {
+        return (double) size / (double) buckets.length;
+    }
+
+    /**
+     * To rehash (create a bigger array of nodes and insert nodes again)
+     */
+    private void rehash() {
+        Node[] buckets = new Node[this.buckets.length * 2];
+        for(Node node : this.buckets) {
+            for(; node != null; node = node.next) {
+                put(buckets, node.data, node.count);
+            }
+        }
+        this.buckets = buckets;
+    }
+    
+    /**
+     * Puts data into its corresponding bucket and updates its count
+     * 
+     * @param buckets The array of nodes
+     * @param data The element to insert
+     * @param count The element's count
+     */
+    private void put(Node[] buckets, String data, int count) {
+        int hash = hashString(data) % buckets.length;
+        Node node = buckets[hash];
+        if(node != null) {
+            while(node != null && !node.data.equals(data)) {
+                node = node.next;
+            }
+            if(node != null) {
+                node.count = count;
+            } else {
+                buckets[hash] = new Node(data, buckets[hash]);
+                buckets[hash].count = count;
+            }
+        } else {
+            buckets[hash] = new Node(data);
+            buckets[hash].count = count;
+        }
+
+    }
+
+    /**
+     * Returns the hash function for inserting elements into hashtable
+     * 
+     * @param str element to insert
+     * @return the index to insert the element 
+     */
+    private int hashString(String str) {
+        final int multiplier = 29;
+        int sum = 0;
+        for(int i = 0; i < str.length(); i++) {
+            sum += str.charAt(i) * multiplier;
+        }
+
+        return sum;
+    }
+    
+    /**
+     * An implementation of a Node
+     */
+    private class Node {
+        private String data;
+        private int    count;
+        private Node   next;
+
+        public Node(String data) {
+            this(data, null);
+        }
+
+        public Node(String data, Node next) {
+            this.data = data;
+            this.count = 1;
+            this.next = next;
+        }
+    }
+
 
 }
-

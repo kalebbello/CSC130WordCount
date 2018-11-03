@@ -1,92 +1,158 @@
 import java.io.IOException;
-
+import java.util.Arrays;
+import java.util.Comparator;
 /**
  * An executable that counts the words in a files and prints out the counts in
  * descending order. You will need to modify this file.
  */
 public class WordCount {
-
-    private static void countWords(String file) {
-        DataCounter<String> counter = new BinarySearchTree<String>();
-
-        try {
-            FileWordReader reader = new FileWordReader(file);
-            String word = reader.nextWord();
-            while (word != null) {
-                counter.incCount(word);
-                word = reader.nextWord();
-            }
-        } catch (IOException e) {
-            System.err.println("Error processing " + file + e);
-            System.exit(1);
-        }
-
-        DataCount<String>[] counts = counter.getCounts();
-        sortByDescendingCount(counts);
-        for (DataCount<String> c : counts)
-            System.out.println(c.count + " \t" + c.data);
-    }
-
-    /**
-     * TODO Replace this comment with your own.
-     * 
-     * Sort the count array in descending order of count. If two elements have
-     * the same count, they should be in alphabetical order (for Strings, that
-     * is. In general, use the compareTo method for the DataCount.data field).
-     * 
-     * This code uses insertion sort. You should modify it to use a heap sort
-     * sorting algorithm. NOTE: the current code assumes the array starts in
-     * alphabetical order! You'll need to make your code deal with unsorted
-     * arrays.
-     * 
-     * The generic parameter syntax here is new, but it just defines E as a
-     * generic parameter for this method, and constrains E to be Comparable. You
-     * shouldn't have to change it.
-     * 
-     * @param counts array to be sorted.
-     */
-    private static <E extends Comparable<? super E>> void sortByDescendingCount(
-            DataCount<E>[] counts) {
-        for (int i = 1; i < counts.length; i++) {
-            DataCount<E> x = counts[i];
-            int j;
-            for (j = i - 1; j >= 0; j--) {
-                if (counts[j].count >= x.count) {
-                    break;
-                }
-                counts[j + 1] = counts[j];
-            }
-            counts[j + 1] = x;
-        }
-    }
-
-    /**
-     * TODO add more options 
-     * 
-     * The command line structure should be:
-	 *	Usage: java correlator [ -b | -a | -h ] <filename1> <filename2>
-	 *		• -b Use an Unbalanced BST in the backend
-	 *		• -a Use an AVL Tree in the backend
-	 *		• -h Use a Hashtable in the backend
-	 *
-	 *@param args Files to utilize the word count program (Hamet, New Atlantis)
-     */
     public static void main(String[] args) {
-	    if (args[0] == "-b" | args[0] == "-a" | args[0] == "-h") {
-	    	switch (args[0]) {
-	    		case "-b": countWords(args[1]);
-	    			break;
-	    		case "-a":
-	    			break;
-			    case "-h":
-			    	break;
-	    	} 
-        } else if(args.length == 1){
-        	countWords(args[0]);
-        	System.exit(1);
-        } else {
-        	System.err.println("Usage: java Correlator [ -b | -a | -h ] <filename1> <filename2>");
-            System.exit(1);
+        if(args.length != 3) {
+            System.out.println("Usage: [-b | -a | -h] [-frequency | -num_unique] <filename>\n");
+            System.out.println("-b - Use an Unbalanced BST");
+            System.out.println("-a - Use an AVL Tree");
+            System.out.println("-h - Use a Hashtable\n");
+            System.out.println("-frequency - Print all the word/frequency pairs, " +
+                               "ordered by frequency, and then by the words in" +
+                               "lexicographic order.\n");
+            System.out.println("-num_unique - Print the number of unique words in the document. " +
+                               "This is the total number of distinct (different) words in the document. " +
+                               "Words that appear more than once are only counted as a single word for " +
+                               "this statistic");
         }
-      }
+
+        System.out.println(args[0]);
+        try {
+            switch(args[1]) {
+                case "-frequency":
+                    countWordFrequencies(countWords(args[0], args[2]));
+                    break;
+                case "-num_unique":
+                    countUniqueWords(countWords(args[0], args[2]));
+                    break;
+                default:
+                    System.out.println("Argument 2 invalid");
+                    break;
+            }
+        } catch(IOException e) {
+            System.out.println("ERROR: could not read file");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Counts the words in a document.
+     *
+     * @return An array of data couns
+     * @throws IOException Thrown if there's an exception wile reading
+     */
+    public static DataCount<String>[] countWords(String dataStructure, String filename) throws IOException {
+        FileWordReader fileWordReader = new FileWordReader(filename);
+        DataCounter<String> wordCounter;
+
+        switch(dataStructure) {
+            case "-b": wordCounter = new BinarySearchTree<>();
+                break;
+            case "-a": wordCounter = new AVLTree<>();
+                break;
+            case "-h": wordCounter = new HashTable();
+                break;
+            default:
+                wordCounter = new BinarySearchTree<>();
+                System.out.println("Invalid data structure. BST Default");
+                break;
+        }
+
+        String word;
+        while((word = fileWordReader.nextWord()) != null) {
+            wordCounter.incCount(word);
+        }
+
+        return wordCounter.getCounts();
+    }
+
+    /**
+     * Prints the word counts given an array of data counts.
+     *
+     * @param dataCounts Data counts
+     * @param <E>        Some type
+     */
+    private static <E> void printWordCounts(DataCount<E>[] dataCounts) {
+        Arrays.stream(dataCounts)
+              .forEach(count -> {
+                  System.out.format("%d %s\n", count.count, count.data);
+              });
+    }
+
+    /**
+     * Counts the word frequencies in a document and lists them
+     * first by frequency, then lexicographically.
+     */
+    private static void countWordFrequencies(DataCount<String>[] dataCounts) {
+        sort(dataCounts, (count1, count2) -> count2.count - count1.count);
+
+        System.out.println("Ordered by Frequency:");
+        printWordCounts(dataCounts);
+
+        sort(dataCounts, (count1, count2) -> count1.data.compareTo(count2.data));
+
+        System.out.println("\nOrdered Lexicographically:");
+        printWordCounts(dataCounts);
+    }
+
+    /**
+     * Prints the number of unique words in a document.
+     */
+    private static void countUniqueWords(DataCount<String>[] dataCounts) {
+        System.out.println("Unique words: " + dataCounts.length);
+    }
+
+    /**
+     * Implementation of merge sort algorithm. Sorts an array of data counts
+     * using a comparator.
+     *
+     * @param dataCounts The array of data counts
+     * @param comparator The comparator to compare data counts
+     * @param <E>        Some type
+     */
+    private static <E> void sort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator) {
+        if(dataCounts.length > 1) {
+            int mid = dataCounts.length / 2;
+            DataCount<E>[] left = Arrays.copyOfRange(dataCounts, 0, mid);
+            DataCount<E>[] right = Arrays.copyOfRange(dataCounts, mid, dataCounts.length);
+
+            sort(left, comparator);
+            sort(right, comparator);
+            merge(dataCounts, left, right, comparator);
+        }
+    }
+
+    /**
+     * Merges the left and right data counts back into the original array.
+     * It's assumed that {@code left + right = dataCounts}.
+     *
+     * @param dataCounts The original array
+     * @param left       The left side of the original array
+     * @param right      The right side of the original array
+     * @param comparator The comparator to compare data counts
+     * @param <E>        Some type
+     */
+    private static <E> void merge(DataCount<E>[] dataCounts,
+                                  DataCount<E>[] left, DataCount<E>[] right,
+                                  Comparator<DataCount<E>> comparator) {
+        int i = 0, j = 0;
+        for(int k = 0; k < dataCounts.length; k++) {
+            if(i < left.length && j < right.length) {
+                if(comparator.compare(left[i], right[j]) <= 0) {
+                    dataCounts[k] = left[i++];
+                } else {
+                    dataCounts[k] = right[j++];
+                }
+            } else if(i < left.length) {
+                dataCounts[k] = left[i++];
+            } else if(j < right.length) {
+                dataCounts[k] = right[j++];
+            }
+        }
+    }
 }

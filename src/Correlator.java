@@ -6,8 +6,6 @@ import java.util.Map;
  * Program that calculates the correlation between
  * two documents.
  *
- * @author Jeremy Asuncion
- * @author Phyllis Lau
  */
 public class Correlator {
     public static void main(String[] args) {

@@ -16,10 +16,8 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
         if (N == null) 
             return 0; 
         else return N.height; 
-  
-        
     } 
-    s
+    
     /**
      * compares two heights and returns max
      * @param a height 1

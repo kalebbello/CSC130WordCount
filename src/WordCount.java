@@ -166,7 +166,7 @@ public class WordCount {
 
         // Build heap (rearrange array)
         for (int i = (n / 2) - 1; i >= 0; i--)
-            heapify(dataCounts, n, i);
+            heapify(dataCounts, n, i, comparator);
 
         // One by one extract an element from heap
         for (int i=n-1; i>=0; i--)
@@ -178,20 +178,15 @@ public class WordCount {
             dataCounts[i] = temp;
 
             // call max heapify on the reduced heap
-            heapify(dataCounts, i, 0);
+            heapify(dataCounts, i, 0, comparator);
         }
     }
 
     // To heapify a subtree rooted with node i which is
     // an index in arr[]. n is size of heap
-    private static <E> void heapify(DataCount<E>[] arr, int n, int i)
+    private static <E> void heapify(DataCount<E>[] arr, int n, int i, Comparator<DataCount<E>> comparator)
     {
-        Comparator<DataCount<E>> comparator = new Comparator<DataCount<E>>() {
-            @Override
-            public int compare(DataCount<E> o1, DataCount<E> o2) {
-                return 0;
-            }
-        };
+
         int smallest = i; // Initialize smallest as root
         int l = 2*i + 1; // left = 2*i + 1
         int r = 2*i + 2; // right = 2*i + 2
@@ -215,7 +210,7 @@ public class WordCount {
             arr[smallest] = swap;
 
             // Recursively heapify the affected sub-tree
-            heapify(arr, n, smallest);
+            heapify(arr, n, smallest,comparator);
         }
     }
 

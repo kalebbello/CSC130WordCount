@@ -1,3 +1,4 @@
+// Authors: Kaleb Bello and Alexis Lozano
 /**
  * Tests the AVL Tree implementation.
  *

@@ -1,3 +1,4 @@
+// Authors: Kaleb Bello and Alexis Lozano
 /**
  * An implementation of hashtable mapping strings to
  * integers. The hashtable uses separate chaining to

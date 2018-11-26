@@ -1,3 +1,4 @@
+// Authors: Kaleb Bello and Alexis Lozano
 /**
  * AVLTree uses BinarySearchTree to implement an AVLTree
  * 

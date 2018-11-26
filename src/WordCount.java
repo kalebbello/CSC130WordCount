@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -89,12 +90,12 @@ public class WordCount {
      * first by frequency, then lexicographically.
      */
     private static void countWordFrequencies(DataCount<String>[] dataCounts) {
-        sort(dataCounts, (count1, count2) -> count2.count - count1.count);
+        Heapsort(dataCounts, (count1, count2) -> count2.count - count1.count);
 
         System.out.println("Ordered by Frequency:");
         printWordCounts(dataCounts);
 
-        sort(dataCounts, (count1, count2) -> count1.data.compareTo(count2.data));
+        Heapsort(dataCounts, (count1, count2) -> count1.data.compareTo(count2.data));
 
         System.out.println("\nOrdered Lexicographically:");
         printWordCounts(dataCounts);
@@ -158,8 +159,9 @@ public class WordCount {
 
     // ********************** HEAP SORT *************************
 
-    private static <E> void sort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator)
+    private static <E> void Heapsort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator)
     {
+
         int n = dataCounts.length;
 
         // Build heap (rearrange array)
@@ -170,7 +172,8 @@ public class WordCount {
         for (int i=n-1; i>=0; i--)
         {
             // Move current root to end
-            int temp = dataCounts[0];
+
+            DataCount<E> temp = dataCounts[0];
             dataCounts[0] = dataCounts[i];
             dataCounts[i] = temp;
 
@@ -188,8 +191,9 @@ public class WordCount {
         int r = 2*i + 2; // right = 2*i + 2
 
         // If left child is smaller than root
-        if (l < n && arr[l] < arr[smallest])
+        if (l < n && arr[l] < arr[smallest]) {
             smallest = l;
+        }
 
         // If right child is smaller than smallest so far
         if (r < n && arr[r] < arr[smallest])
@@ -198,7 +202,7 @@ public class WordCount {
         // If smallest is not root
         if (smallest != i)
         {
-            int swap = arr[i];
+            DataCount<E> swap = arr[i];
             arr[i] = arr[smallest];
             arr[smallest] = swap;
 

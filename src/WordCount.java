@@ -133,8 +133,8 @@ public class WordCount {
      * It's assumed that {@code left + right = dataCounts}.
      *
      * @param dataCounts The original array
-     * @param left       The left side of the original array
-     * @param right      The right side of the original array
+     //* @param l      The left side of the original array
+    // * @param r     The right side of the original array
      * @param comparator The comparator to compare data counts
      * @param <E>        Some type
      */
@@ -165,7 +165,7 @@ public class WordCount {
         int n = dataCounts.length;
 
         // Build heap (rearrange array)
-        for (int i = n / 2 - 1; i >= 0; i--)
+        for (int i = (n / 2) - 1; i >= 0; i--)
             heapify(dataCounts, n, i);
 
         // One by one extract an element from heap
@@ -186,17 +186,25 @@ public class WordCount {
     // an index in arr[]. n is size of heap
     private static <E> void heapify(DataCount<E>[] arr, int n, int i)
     {
+        Comparator<DataCount<E>> comparator = new Comparator<DataCount<E>>() {
+            @Override
+            public int compare(DataCount<E> o1, DataCount<E> o2) {
+                return 0;
+            }
+        };
         int smallest = i; // Initialize smallest as root
         int l = 2*i + 1; // left = 2*i + 1
         int r = 2*i + 2; // right = 2*i + 2
 
         // If left child is smaller than root
-        if (l < n && arr[l] < arr[smallest]) {
+        //if (l < n && arr[l] < arr[smallest]) {
+        if (l < n && comparator.compare(arr[l], arr[smallest]) < 0 ) {
             smallest = l;
         }
 
         // If right child is smaller than smallest so far
-        if (r < n && arr[r] < arr[smallest])
+        //if (r < n && arr[r].compareTo(arr[smallest]))
+        if (r < n && comparator.compare(arr[r], arr[smallest]) < 0)
             smallest = r;
 
         // If smallest is not root

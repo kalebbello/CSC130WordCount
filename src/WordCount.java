@@ -1,4 +1,4 @@
-import javax.xml.crypto.Data;
+// Authors: Kaleb Bello and Alexis Lozano
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -108,60 +108,10 @@ public class WordCount {
         System.out.println("Unique words: " + dataCounts.length);
     }
 
-    /**
-     * Implementation of merge sort algorithm. Sorts an array of data counts
-     * using a comparator.
-     *
-     * @param dataCounts The array of data counts
-     * @param comparator The comparator to compare data counts
-     * @param <E>        Some type
-     */
-   /* private static <E> void sort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator) {
-        if(dataCounts.length > 1) {
-            int mid = dataCounts.length / 2;
-            DataCount<E>[] left = Arrays.copyOfRange(dataCounts, 0, mid);
-            DataCount<E>[] right = Arrays.copyOfRange(dataCounts, mid, dataCounts.length);
-
-            sort(left, comparator);
-            sort(right, comparator);
-            merge(dataCounts, left, right, comparator);
-        }
-    }*/
-
-    /**
-     * Merges the left and right data counts back into the original array.
-     * It's assumed that {@code left + right = dataCounts}.
-     *
-     * @param dataCounts The original array
-     //* @param l      The left side of the original array
-    // * @param r     The right side of the original array
-     * @param comparator The comparator to compare data counts
-     * @param <E>        Some type
-     */
-   /* private static <E> void merge(DataCount<E>[] dataCounts,
-                                  DataCount<E>[] left, DataCount<E>[] right,
-                                  Comparator<DataCount<E>> comparator) {
-        int i = 0, j = 0;
-        for(int k = 0; k < dataCounts.length; k++) {
-            if(i < left.length && j < right.length) {
-                if(comparator.compare(left[i], right[j]) <= 0) {
-                    dataCounts[k] = left[i++];
-                } else {
-                    dataCounts[k] = right[j++];
-                }
-            } else if(i < left.length) {
-                dataCounts[k] = left[i++];
-            } else if(j < right.length) {
-                dataCounts[k] = right[j++];
-            }
-        }
-    }*/
-
     // ********************** HEAP SORT *************************
 
     private static <E> void Heapsort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator)
     {
-
         int n = dataCounts.length;
 
         // Build heap (rearrange array)
@@ -182,35 +132,31 @@ public class WordCount {
         }
     }
 
-    // To heapify a subtree rooted with node i which is
-    // an index in arr[]. n is size of heap
+    // To heapify a subtree rooted with node i
     private static <E> void heapify(DataCount<E>[] arr, int n, int i, Comparator<DataCount<E>> comparator)
     {
+        int largest = i; // Initialize largest as root
+        int l = 2*i + 1;
+        int r = 2*i + 2;
 
-        int smallest = i; // Initialize smallest as root
-        int l = 2*i + 1; // left = 2*i + 1
-        int r = 2*i + 2; // right = 2*i + 2
-
-        // If left child is smaller than root
-        //if (l < n && arr[l] < arr[smallest]) {
-        if (l < n && comparator.compare(arr[l], arr[smallest]) < 0 ) {
-            smallest = l;
+        // Check if left is larger than root
+        if (l < n && comparator.compare(arr[l], arr[largest]) > 0 ) {
+            largest = l;
         }
 
-        // If right child is smaller than smallest so far
-        //if (r < n && arr[r].compareTo(arr[smallest]))
-        if (r < n && comparator.compare(arr[r], arr[smallest]) < 0)
-            smallest = r;
+        // Check if right is larger than root
+        if (r < n && comparator.compare(arr[r], arr[largest]) > 0)
+            largest = r;
 
-        // If smallest is not root
-        if (smallest != i)
+        // If largest is not root
+        if (largest != i)
         {
             DataCount<E> swap = arr[i];
-            arr[i] = arr[smallest];
-            arr[smallest] = swap;
+            arr[i] = arr[largest];
+            arr[largest] = swap;
 
-            // Recursively heapify the affected sub-tree
-            heapify(arr, n, smallest,comparator);
+            // Recursively heapify necessary sub-trees
+            heapify(arr, n, largest ,comparator);
         }
     }
 

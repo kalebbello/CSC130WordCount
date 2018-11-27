@@ -77,7 +77,8 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
     	return singleRightRotate(k3);
     }
      
-    private BSTNode doubleRightLeftRotation(BSTNode k1) {
+    @SuppressWarnings("unused")
+	private BSTNode doubleRightLeftRotation(BSTNode k1) {
     	k1.right = singleRightRotate(k1.right);
     	return singleLeftRotate(k1);
     }
@@ -90,7 +91,8 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
         return height(N.left) - height(N.right); 
     } 
     
-    private BSTNode insert(BSTNode node,E data) { 
+    @SuppressWarnings("unused")
+	private BSTNode insert(BSTNode node,E data) { 
     	  
         //Perform the normal BST insertion
         if (node == null) 
@@ -138,7 +140,8 @@ public class AVLTree<E extends Comparable<? super E>> extends BinarySearchTree<E
  
     } 
     
-    private void preOrder(BSTNode node) { 
+    @SuppressWarnings("unused")
+	private void preOrder(BSTNode node) { 
         if (node != null) { 
             System.out.print(node.data + " "); 
             preOrder(node.left); 

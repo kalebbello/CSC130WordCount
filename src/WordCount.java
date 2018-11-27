@@ -45,15 +45,12 @@ public class WordCount {
     /**
      * Counts the words in a document.
      *
-     * @return An array of data couns
+     * @return An array of data counts
      * @throws IOException Thrown if there's an exception wile reading
      */
     public static DataCount<String>[] countWords(String dataStructure, String filename) throws IOException {
         FileWordReader fileWordReader = new FileWordReader(filename);
         DataCounter<String> wordCounter;
-
-        long start = System.currentTimeMillis();
-
 
         switch(dataStructure) {
             case "-b": wordCounter = new BinarySearchTree<>();
@@ -83,15 +80,12 @@ public class WordCount {
      * @param <E>        Some type
      */
     private static <E> void printWordCounts(DataCount<E>[] dataCounts) {
-        Arrays.stream(dataCounts)
-              .forEach(count -> {
-                  System.out.format("%d %s\n", count.count, count.data);
-              });
+        Arrays.stream(dataCounts).forEach(count -> {System.out.format("%d %s\n", count.count, count.data);});
     }
 
     /**
      * Counts the word frequencies in a document and lists them
-     * first by frequency, then lexicographically.
+     * first by frequency, then lexicographically (alphabetically).
      */
     private static void countWordFrequencies(DataCount<String>[] dataCounts) {
         Heapsort(dataCounts, (count1, count2) -> count2.count - count1.count);
@@ -108,13 +102,17 @@ public class WordCount {
 
     /**
      * Prints the number of unique words in a document.
+     * @param dataCounts
      */
     private static void countUniqueWords(DataCount<String>[] dataCounts) {
         System.out.println("Unique words: " + dataCounts.length);
     }
 
-    // ********************** HEAP SORT *************************
-
+    
+    /**
+     * @param dataCounts DataCounts
+     * @param comparator Comparator 
+     */
     private static <E> void Heapsort(DataCount<E>[] dataCounts, Comparator<DataCount<E>> comparator)
     {
         int n = dataCounts.length;
@@ -137,7 +135,12 @@ public class WordCount {
         }
     }
 
-    // To heapify a subtree rooted with node i
+    /**
+     * @param arr
+     * @param n
+     * @param i
+     * @param comparator
+     */
     private static <E> void heapify(DataCount<E>[] arr, int n, int i, Comparator<DataCount<E>> comparator)
     {
         int largest = i; // Initialize largest as root
@@ -164,5 +167,4 @@ public class WordCount {
             heapify(arr, n, largest ,comparator);
         }
     }
-
-    }
+}

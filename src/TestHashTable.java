@@ -20,7 +20,8 @@ public class TestHashTable {
         DataCount<String> s8 = new DataCount<>("kaleb", 2);
 
 
-        DataCount[] expected = {s, s1, s2, s3, s4, s5, s6, s7, s8};
+        @SuppressWarnings("rawtypes")
+		DataCount[] expected = {s, s1, s2, s3, s4, s5, s6, s7, s8};
 
         boolean error = false;
 

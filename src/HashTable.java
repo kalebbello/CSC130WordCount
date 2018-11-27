@@ -52,8 +52,12 @@ public class HashTable implements DataCounter<String> {
     }
     
 
-     // Helper method to add elements into hashtable
-
+     /**
+      *  Helper method to add elements into hashtable
+      * @param buckets
+      * @param data
+      * @return
+      */
     private boolean insert(Node[] buckets, String data) {
         int hash = hashString(data) % buckets.length;
         Node node = buckets[hash];
@@ -83,7 +87,6 @@ public class HashTable implements DataCounter<String> {
 
 
     // Rehash so it's a growing array
-
     private void rehash() {
         Node[] buckets = new Node[this.buckets.length * 2];
         for(Node node : this.buckets) {
@@ -118,7 +121,6 @@ public class HashTable implements DataCounter<String> {
     }
 
     // Return the Hash function after insertion
-
     private int hashString(String str) {
         final int multiplier = 29;
         int sum = 0;

@@ -7,7 +7,7 @@ public class TestHashTable {
         HashTable hash = new HashTable(10);
 
         String[] data = {"tom", "hello there", "tom", "tom", "hello there", "javadoc", "data structures", "hello there",
-                "javadoc", "dumbo", "computer science", "project3", "computer science", "project3", "phyllislau", "sky", "phyllislau", "dumbo"};
+                "javadoc", "dumbo", "computer science", "project3", "computer science", "project3", "kaleb", "sky", "kaleb", "dumbo"};
 
         DataCount<String> s = new DataCount<>("hello there", 3);
         DataCount<String> s1 = new DataCount<>("tom", 3);
@@ -17,7 +17,7 @@ public class TestHashTable {
         DataCount<String> s5 = new DataCount<>("javadoc", 2);
         DataCount<String> s6 = new DataCount<>("data structures", 1);
         DataCount<String> s7 = new DataCount<>("dumbo", 2);
-        DataCount<String> s8 = new DataCount<>("phyllislau", 2);
+        DataCount<String> s8 = new DataCount<>("kaleb", 2);
 
 
         DataCount[] expected = {s, s1, s2, s3, s4, s5, s6, s7, s8};

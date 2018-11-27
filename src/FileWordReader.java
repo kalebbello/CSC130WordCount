@@ -1,4 +1,6 @@
-// Kaleb Bello and Alexis Lozano
+/**
+ * Author: Kaleb Bello and Alexis Lozano
+ */
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

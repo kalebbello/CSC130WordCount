@@ -1,4 +1,6 @@
-// Authors: Kaleb Bello and Alexis Lozano
+/**
+ *  Authors: Kaleb Bello and Alexis Lozano
+ */
 
 /**
  * An implementation of hashtable mapping strings to

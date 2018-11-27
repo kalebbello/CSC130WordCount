@@ -1,4 +1,6 @@
-// Authors: Kaleb Bello and Alexis Lozano
+/*
+ * Authors: Kaleb Bello and Alexis Lozano
+ */
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;

@@ -1,4 +1,6 @@
-// Kaleb Bello and Alexis Lozano
+/**
+ * Authors: Kaleb Bello and Alexis Lozano
+ */
 /**
  * Simple class to hold a piece of data and its count. The class has package
  * access so that the various implementations of DataCounter can access its

@@ -1,4 +1,6 @@
-// Authors: Kaleb Bello and Alexis Lozano
+/*
+ *  Authors: Kaleb Bello and Alexis Lozano
+ */
 /**
  * Unit tests for the hashtable {@code DataCounter}.
  */

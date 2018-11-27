@@ -7,6 +7,7 @@ import java.util.Comparator;
  * descending order. You will need to modify this file.
  */
 public class WordCount {
+
     public static void main(String[] args) {
         if(args.length != 3) {
             System.out.println("Usage: [-b | -a | -h] [-frequency | -num_unique] <filename>\n");
@@ -51,13 +52,16 @@ public class WordCount {
         FileWordReader fileWordReader = new FileWordReader(filename);
         DataCounter<String> wordCounter;
 
+        long start = System.currentTimeMillis();
+
+
         switch(dataStructure) {
             case "-b": wordCounter = new BinarySearchTree<>();
                 break;
             case "-a": wordCounter = new AVLTree<>();
                 break;
             case "-h": wordCounter = new HashTable();
-                break;
+            break;
             default:
                 wordCounter = new BinarySearchTree<>();
                 System.out.println("Invalid data structure. BST Default");
@@ -99,6 +103,7 @@ public class WordCount {
 
         System.out.println("\nOrdered Lexicographically:");
         printWordCounts(dataCounts);
+
     }
 
     /**
@@ -160,4 +165,4 @@ public class WordCount {
         }
     }
 
-}
+    }

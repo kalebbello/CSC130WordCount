@@ -6,26 +6,26 @@ public class TestHashTable {
     public static void main(String[] args) {
         HashTable hash = new HashTable(10);
 
-        String[] data = {"bob", "hello there", "bob", "bob", "hello there", "javadoc", "data structures", "hello there",
-                         "javadoc", "dumbo", "computer science", "project3", "computer science", "project3", "phyllislau", "jeremy", "phyllislau", "dumbo"};
+        String[] data = {"tom", "hello there", "tom", "tom", "hello there", "javadoc", "data structures", "hello there",
+                "javadoc", "dumbo", "computer science", "project3", "computer science", "project3", "phyllislau", "sky", "phyllislau", "dumbo"};
 
-        DataCount<String> d = new DataCount<>("hello there", 3);
-        DataCount<String> d1 = new DataCount<>("bob", 3);
-        DataCount<String> d2 = new DataCount<>("jeremy", 1);
-        DataCount<String> d3 = new DataCount<>("computer science", 2);
-        DataCount<String> d4 = new DataCount<>("project3", 2);
-        DataCount<String> d5 = new DataCount<>("javadoc", 2);
-        DataCount<String> d6 = new DataCount<>("data structures", 1);
-        DataCount<String> d7 = new DataCount<>("dumbo", 2);
-        DataCount<String> d8 = new DataCount<>("phyllislau", 2);
+        DataCount<String> s = new DataCount<>("hello there", 3);
+        DataCount<String> s1 = new DataCount<>("tom", 3);
+        DataCount<String> s2 = new DataCount<>("sky", 1);
+        DataCount<String> s3 = new DataCount<>("computer science", 2);
+        DataCount<String> s4 = new DataCount<>("project3", 2);
+        DataCount<String> s5 = new DataCount<>("javadoc", 2);
+        DataCount<String> s6 = new DataCount<>("data structures", 1);
+        DataCount<String> s7 = new DataCount<>("dumbo", 2);
+        DataCount<String> s8 = new DataCount<>("phyllislau", 2);
 
 
-        DataCount[] expected = {d, d1, d2, d3, d4, d5, d6, d7, d8};
+        DataCount[] expected = {s, s1, s2, s3, s4, s5, s6, s7, s8};
 
         boolean error = false;
 
-        for(String s : data) {
-            hash.incCount(s);
+        for(String d : data) {
+            hash.incCount(d);
         }
 
         DataCount<String>[] dataCounts = hash.getCounts();

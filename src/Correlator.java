@@ -30,16 +30,11 @@ public class Correlator {
             return;
         }
 
-        System.out.println("\nDifference metric: " + differenceMetric(count0, count1));
+        System.out.println("\nDifference metric: " + metric(count0, count1));
 
     }
 
-    /**
-     * Counts the total amount of words in an array of data counts.
-     *
-     * @param dataCounts The data counts
-     * @return The total amount of words
-     */
+
     private static int getTotalCount(DataCount<String>[] dataCounts) {
         int totalWords = 0;
         for(DataCount<String> dataCount : dataCounts) {
@@ -52,8 +47,6 @@ public class Correlator {
      * Returns the frequency for a string in an array of data counts, providing
      * the frequency is {@code 0.0001 < x < 0.01}.
      *
-     * @param dataCounts The array of data counts
-     * @return Strings mapped to their respective frequency
      */
     private static Map<String, Double> frequency(DataCount<String>[] dataCounts) {
         double totalCount = (double) getTotalCount(dataCounts);
@@ -75,17 +68,17 @@ public class Correlator {
      * @param dataCounts2 The data counts for the second document
      * @return The difference metric between both documents
      */
-    private static double differenceMetric(DataCount<String>[] dataCounts1, DataCount<String>[] dataCounts2) {
+    private static double metric(DataCount<String>[] dataCounts1, DataCount<String>[] dataCounts2) {
         System.out.println("Frequencies for first file:");
-        Map<String, Double> frequencies1 = frequency(dataCounts1);
+        Map<String, Double> freq1 = frequency(dataCounts1);
 
         System.out.println("\nFrequencies for second file:");
-        Map<String, Double> frequencies2 = frequency(dataCounts2);
+        Map<String, Double> freq2 = frequency(dataCounts2);
 
         double sum = 0;
-        for(String key : frequencies1.keySet()) {
-            if(frequencies2.containsKey(key)) {
-                double diff = Math.abs(frequencies1.get(key) - frequencies2.get(key));
+        for(String key : freq1.keySet()) {
+            if(freq2.containsKey(key)) {
+                double diff = Math.abs(freq1.get(key) - freq2.get(key));
                 sum += diff * diff;
             }
         }

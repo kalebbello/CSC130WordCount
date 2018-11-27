@@ -1,4 +1,5 @@
 // Authors: Kaleb Bello and Alexis Lozano
+
 /**
  * An implementation of hashtable mapping strings to
  * integers. The hashtable uses separate chaining to
@@ -20,9 +21,7 @@ public class HashTable implements DataCounter<String> {
         size = 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @SuppressWarnings("unchecked")
     public DataCount<String>[] getCounts() {
         DataCount<String>[] dataCounts = new DataCount[size];
@@ -35,9 +34,7 @@ public class HashTable implements DataCounter<String> {
         return dataCounts;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public int getSize() {
         return size;
     }
@@ -46,19 +43,15 @@ public class HashTable implements DataCounter<String> {
      * {@inheritDoc}
      */
     public void incCount(String data) {
-        if(calculateLoadFactor() > 0.75) {
+        if(loadFactor() > 0.75) {
             rehash();
         }
         if(insert(buckets, data)) size++;
     }
     
-    /**
-     * Helper method to add elements into hashtable
-     * 
-     * @param buckets An array of nodes
-     * @param data The element to add to the hashtable
-     * @return Boolean value depending on whether insertion is successful
-     */
+
+     // Helper method to add elements into hashtable
+
     private boolean insert(Node[] buckets, String data) {
         int hash = hashString(data) % buckets.length;
         Node node = buckets[hash];
@@ -69,7 +62,7 @@ public class HashTable implements DataCounter<String> {
             while(node != null && !node.data.equals(data)) {
                 node = node.next;
             }
-
+            // Check to make sure node is not null
             if(node == null) {
                 buckets[hash] = new Node(data, buckets[hash]);
                 return true;
@@ -80,18 +73,15 @@ public class HashTable implements DataCounter<String> {
         }
     }
     
-    /**
-     * Finding the load factor of the hashtable 
-     * 
-     * @return the load factor of the hashtable
-     */
-    private double calculateLoadFactor() {
+
+     // Finding the load factor of the hashtable
+    private double loadFactor() {
         return (double) size / (double) buckets.length;
     }
 
-    /**
-     * To rehash (create a bigger array of nodes and insert nodes again)
-     */
+
+    // Rehash so it's a growing array
+
     private void rehash() {
         Node[] buckets = new Node[this.buckets.length * 2];
         for(Node node : this.buckets) {
@@ -102,16 +92,12 @@ public class HashTable implements DataCounter<String> {
         this.buckets = buckets;
     }
     
-    /**
-     * Puts data into its corresponding bucket and updates its count
-     * 
-     * @param buckets The array of nodes
-     * @param data The element to insert
-     * @param count The element's count
-     */
+
+    //Organize the buckets so it corresponds correctly
     private void put(Node[] buckets, String data, int count) {
         int hash = hashString(data) % buckets.length;
         Node node = buckets[hash];
+        // Always check to make sure node is not NULL
         if(node != null) {
             while(node != null && !node.data.equals(data)) {
                 node = node.next;
@@ -129,12 +115,8 @@ public class HashTable implements DataCounter<String> {
 
     }
 
-    /**
-     * Returns the hash function for inserting elements into hashtable
-     * 
-     * @param str element to insert
-     * @return the index to insert the element 
-     */
+    // Return the Hash function after insertion
+
     private int hashString(String str) {
         final int multiplier = 29;
         int sum = 0;
@@ -145,9 +127,7 @@ public class HashTable implements DataCounter<String> {
         return sum;
     }
     
-    /**
-     * An implementation of a Node
-     */
+    // Node implementaion, will be used through out the class
     private class Node {
         private String data;
         private int    count;

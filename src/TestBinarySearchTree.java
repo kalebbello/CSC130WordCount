@@ -18,6 +18,7 @@ public class TestBinarySearchTree {
             return;
         }
 
+        // checks to make sure there is data so the test can be ran
         if (args.length == 1) {
             dumpall = true;
             if (args[0].compareTo("notest") == 0)
@@ -93,6 +94,7 @@ public class TestBinarySearchTree {
                 System.out.println(out);
         }
 
+        // Last check, to see if it passes and prints out result
         if (!notest) {
             if (error)
                 System.out.println("Test failed!");

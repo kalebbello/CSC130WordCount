@@ -131,7 +131,7 @@ public class HashTable implements DataCounter<String> {
         return sum;
     }
     
-    // Node implementaion, will be used through out the class
+    // Node implementation, will be used through out the class
     private class Node {
         private String data;
         private int    count;
